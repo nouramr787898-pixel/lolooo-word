@@ -81,7 +81,7 @@ function requestProfile(name){if(name==='أسماء'){$('passwordError').textCon
 $('passwordForm').addEventListener('submit',e=>{e.preventDefault();if($('profilePassword').value!=='na'){$('passwordError').textContent='كلمة السر غير صحيحة، جربي مرة تانية';return}$('passwordOverlay').hidden=true;finishProfile('أسماء')});
 $('cancelPassword').onclick=()=>{$('passwordOverlay').hidden=true;$('profilePassword').value=''};
 const greetings={
-'أسماء':{title:'أهلًا بيكي يا لولوووو! 💜',subtitle:'نورتي مساحتك يا لولوو ✨',emoji:'🎆'},
+'أسماء':{title:'أهلًا بيكي يا لولوووو يا حبيبتي 💜',subtitle:'بحبكك يا حبيبتي ❤️',emoji:'🎆'},
 'حماتي':{title:'أهلًا وسهلًا! 💐',subtitle:'حماتك في عينك 😄',emoji:'🎉'},
 'جودي':{title:'أهلًا يا جوجوووو! 🎀',subtitle:'نورتي لولووو وورد يا جوجو',emoji:'🥳'},
 'حبيبة':{title:'أهلًا بيكي يا حبيبة! 💗',subtitle:'حبيبة ولا بيبه بقى المرة دي؟ 😂',emoji:'😆'}};
