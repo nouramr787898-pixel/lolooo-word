@@ -57,7 +57,6 @@ $('pdfBtn').onclick=async()=>{
   }catch(err){console.error(err);toast(err.message||'تعذّر تنزيل PDF، جرّبي مرة أخرى.');}
   finally{page?.remove();btn.disabled=false;btn.innerHTML=previous;}
 };
-$('importBtn').onclick=()=>$('fileImport').click();$('fileImport').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2000000){toast('الملف كبير جدًا');return}const content=await f.text();newDocument();$('docTitle').value=f.name.replace(/\.(txt|html?)$/i,'');editor.innerHTML=/\.txt$/i.test(f.name)?'<p>'+safeText(content).replace(/\n/g,'<br>')+'</p>':stripUnsafe(content.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1]||content);writeCurrent();e.target.value='';toast('تم الاستيراد')};
 $('generate').onclick=async()=>{
  const topic=$('topic').value.trim();if(!topic)return toast('اكتب طلبك أولًا');
  const endpoint=(window.LOLO_CONFIG?.geminiEndpoint||'').trim();
