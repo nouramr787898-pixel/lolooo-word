@@ -29,3 +29,15 @@ button:not(:disabled):hover{transform:translateY(-1px)}.icon,[data-icon]{display
 @keyframes welcomePop{from{opacity:0;transform:scale(.75) translateY(25px)}to{opacity:1;transform:scale(1) translateY(0)}}
 @media(max-width:500px){.nourMark{width:48px;height:48px;border-radius:15px}.nourIdentity h2{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.nourOrbit,.nourTwinkle,.welcomeOverlay .welcomeCard{animation:none}}
+
+/* Study-break accordion */
+.break-zone{margin-top:22px;border-top:1px solid #e4e6f4;padding-top:18px}
+.break-zone details{border:1px solid #dedff4;border-radius:18px;background:linear-gradient(155deg,#fbfaff,#f4f7ff);overflow:hidden}
+.break-zone summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;list-style:none;padding:15px;user-select:none}
+.break-zone summary::-webkit-details-marker{display:none}
+.break-heading{display:flex;align-items:center;gap:11px}.break-emoji{font-size:27px}.break-heading strong{display:block;color:#263b98;font-size:17px}.break-heading small{display:block;color:#686a89;font-size:12px;margin-top:4px}.break-chevron{font-size:24px;color:#8d4ebe}
+.break-content{padding:4px 14px 18px}.break-intro{background:white;border-radius:12px;padding:12px;color:#624a8f;font-size:13px}
+.break-content h3{font-size:16px;color:#253a96;margin:20px 0 12px}.break-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.break-tiles article{padding:12px;background:white;border:1px solid #e8e5f5;border-radius:13px}.break-tiles article>span{font-size:24px;display:block;margin-bottom:6px}.break-tiles b{font-size:13px}.break-tiles p,.study-steps p{font-size:12px;line-height:1.8;margin:5px 0;color:#414964}.break-safety{font-size:12px;color:#765a85}.study-steps{background:white;padding:10px;border-radius:12px}
+.break-joke-btn{background:linear-gradient(110deg,#274fc3,#bb43b9);color:#fff;border:none;border-radius:12px;padding:13px 15px;width:100%;font-weight:700;cursor:pointer}.break-joke-btn:disabled{opacity:.65;cursor:wait}.break-joke-result{background:#fff;border:1px solid #e4dff1;border-radius:12px;padding:13px;white-space:pre-wrap;line-height:1.9;margin-top:10px;color:#2c3270}
+.pdf-export-page{position:fixed;left:-99999px;top:0;z-index:-1;direction:rtl}.pdf-export-page img{max-width:100%;height:auto}.pdf-export-page table{border-collapse:collapse;max-width:100%;width:100%}.pdf-export-page td,.pdf-export-page th{border:1px solid #aaa;padding:6px}.pdf-export-page p{margin:0 0 10px}
+@media(max-width:430px){.break-tiles{grid-template-columns:1fr}}

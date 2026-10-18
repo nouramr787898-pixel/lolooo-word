@@ -4,7 +4,7 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show')
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function safeText(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function stripUnsafe(html){const template=document.createElement('template');template.innerHTML=html;template.content.querySelectorAll('script,iframe,object,embed,form,link,meta,style').forEach(n=>n.remove());template.content.querySelectorAll('*').forEach(n=>{[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||(/^(href|src)$/i.test(a.name)&&/^(javascript:|data:text\/html)/i.test(a.value)))n.removeAttribute(a.name)})});return template.innerHTML}
-function persist(){if(!KEY)return false;try{localStorage.setItem(KEY,JSON.stringify(docs));$('status').textContent='تم الحفظ ✓';return true}catch(e){$('status').textContent='تعذّر الحفظ: المساحة ممتلئة';toast('تعذّر الحفظ محليًا. نزّل نسخة HTML.');return false}}
+function persist(){if(!KEY)return false;try{localStorage.setItem(KEY,JSON.stringify(docs));$('status').textContent='تم الحفظ ✓';return true}catch(e){$('status').textContent='تعذّر الحفظ: المساحة ممتلئة';toast('تعذّر الحفظ المحلي؛ تأكدي من مساحة المتصفح ونزّلي PDF للاحتفاظ بنسخة.');return false}}
 function updateCount(){const text=editor.innerText.trim();$('wordCount').textContent=(text?text.split(/\s+/).length:0)+' كلمة'}
 function writeCurrent(){if(!active)return;const d=docs.find(x=>x.id===active);if(!d)return;d.title=$('docTitle').value.trim()||'مستند بدون عنوان';d.html=editor.innerHTML;d.updated=Date.now();persist();renderDocs()}
 function delayedSave(){ $('status').textContent='جارٍ الحفظ...';updateCount();clearTimeout(autosaveTimer);autosaveTimer=setTimeout(writeCurrent,600)}
@@ -28,8 +28,36 @@ document.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',()
 $('addTable').onclick=()=>command('insertHTML','<table><tbody><tr><td>العمود الأول</td><td>العمود الثاني</td></tr><tr><td>المحتوى</td><td>المحتوى</td></tr></tbody></table><p></p>');$('addImage').onclick=()=>$('imageInput').click();$('imageInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>1200000){toast('اختار صورة أقل من 1.2 ميجابايت لتجنب امتلاء مساحة الحفظ');return}const r=new FileReader();r.onload=()=>command('insertImage',r.result);r.readAsDataURL(f);e.target.value=''};
 function download(name,body,type){const blob=new Blob([body],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)}
 function cleanName(s){return(s||'مستند').replace(/[\\/:*?"<>|]/g,'-').slice(0,80)}
-$('downloadHtml').onclick=()=>{writeCurrent();download(cleanName($('docTitle').value)+'.html','<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><title>'+safeText($('docTitle').value)+'</title><body style="font-family:Tahoma,Arial;line-height:1.8">'+stripUnsafe(editor.innerHTML)+'</body></html>','text/html;charset=utf-8');toast('تم تنزيل نسخة HTML')};
-$('pdfBtn').onclick=()=>{writeCurrent();toast('اختار Save as PDF من نافذة الطباعة');window.print()};$('importBtn').onclick=()=>$('fileImport').click();$('fileImport').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2000000){toast('الملف كبير جدًا');return}const content=await f.text();newDocument();$('docTitle').value=f.name.replace(/\.(txt|html?)$/i,'');editor.innerHTML=/\.txt$/i.test(f.name)?'<p>'+safeText(content).replace(/\n/g,'<br>')+'</p>':stripUnsafe(content.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1]||content);writeCurrent();e.target.value='';toast('تم الاستيراد')};
+// PDF direct download (no browser print dialog)
+$('pdfBtn').onclick=async()=>{
+  if(!active)return toast('افتحي مستندًا أولًا');
+  writeCurrent();
+  const btn=$('pdfBtn');const previous=btn.innerHTML;
+  btn.disabled=true;btn.textContent='⏳ جارٍ تجهيز PDF...';
+  let page;
+  try{
+    if(typeof window.html2pdf!=='function')throw new Error('مكتبة PDF لم تُحمّل؛ تأكدي من الإنترنت ثم أعيدي المحاولة.');
+    page=document.createElement('div');page.className='pdf-export-page';
+    page.dir=editor.dir||'rtl';
+    page.style.cssText='width:700px;padding:32px 34px;background:white;color:#172344;font-family:Tahoma,Arial,sans-serif;line-height:1.85;box-sizing:border-box;';
+    const title=document.createElement('h1');title.textContent=$('docTitle').value||'مستند';
+    title.style.cssText='font-size:22px;margin:0 0 18px;text-align:center;overflow-wrap:anywhere;';
+    const body=document.createElement('div');body.innerHTML=stripUnsafe(editor.innerHTML);
+    body.style.cssText='font-size:15px;overflow-wrap:anywhere;';
+    page.append(title,body);document.body.append(page);
+    const filename=cleanName($('docTitle').value)+'.pdf';
+    await window.html2pdf().set({
+      margin: [8,8,8,8],filename,
+      image:{type:'jpeg',quality:0.98},
+      html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',scrollY:0,windowWidth:1000},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+      pagebreak:{mode:['css','legacy']}
+    }).from(page).save();
+    toast('تم تجهيز ملف PDF للتنزيل ✓');
+  }catch(err){console.error(err);toast(err.message||'تعذّر تنزيل PDF، جرّبي مرة أخرى.');}
+  finally{page?.remove();btn.disabled=false;btn.innerHTML=previous;}
+};
+$('importBtn').onclick=()=>$('fileImport').click();$('fileImport').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;if(f.size>2000000){toast('الملف كبير جدًا');return}const content=await f.text();newDocument();$('docTitle').value=f.name.replace(/\.(txt|html?)$/i,'');editor.innerHTML=/\.txt$/i.test(f.name)?'<p>'+safeText(content).replace(/\n/g,'<br>')+'</p>':stripUnsafe(content.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1]||content);writeCurrent();e.target.value='';toast('تم الاستيراد')};
 $('generate').onclick=async()=>{
  const topic=$('topic').value.trim();if(!topic)return toast('اكتب طلبك أولًا');
  const endpoint=(window.LOLO_CONFIG?.geminiEndpoint||'').trim();
@@ -88,3 +116,21 @@ const greetings={
 function finishProfile(name){startProfile(name);const msg=greetings[name];$('welcomeTitle').textContent=msg.title;$('welcomeSubtitle').textContent=msg.subtitle;$('welcomeEmoji').textContent=msg.emoji;const c=$('confetti');c.replaceChildren();for(let i=0;i<28;i++){let s=document.createElement('span');s.style.setProperty('--x',(i*37%100)+'%');s.style.setProperty('--delay',(i*71%850)+'ms');s.style.setProperty('--color',['#3055c7','#c047bf','#e9a7ed','#8d62d6','#ffc361'][i%5]);c.appendChild(s)}$('welcomeOverlay').hidden=false}
 $('welcomeContinue').onclick=()=>{$('welcomeOverlay').hidden=true;editor.focus()};
 applyIcons();
+
+// Study-break section: same Gemini Worker endpoint; no public API key
+const jokeButton=$('breakJokeBtn');
+if(jokeButton)jokeButton.addEventListener('click',async()=>{
+  const endpoint=(window.LOLO_CONFIG?.geminiEndpoint||'').trim();
+  const status=$('breakJokeStatus'),output=$('breakJokeResult');
+  if(!/^https:\/\//.test(endpoint)){status.textContent='Nour Ai مش متصل حاليًا.';return;}
+  jokeButton.disabled=true;status.textContent='Nour Ai بيحضّر نكتة خفيفة...';
+  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),45000);
+  try{
+    const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:'قول نكتة عربية مصرية قصيرة ولطيفة مناسبة للطلاب عن المذاكرة أو الكتب، بدون تجريح أو ألفاظ غير لائقة. اكتب النكتة فقط.'}),signal:ctrl.signal});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw Error(data.error||'تعذر الحصول على النكتة');
+    output.textContent=data.text?.trim()||'جربي مرة تانية 😄';status.textContent='';
+  }catch(e){status.textContent=e.name==='AbortError'?'الطلب استغرق وقتًا طويلًا، جربي مرة أخرى.':'تعذّر الاتصال الآن؛ جربي بعد شوية.';}
+  finally{clearTimeout(timer);jokeButton.disabled=false;}
+});
