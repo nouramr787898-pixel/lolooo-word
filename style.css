@@ -18,3 +18,14 @@ button:not(:disabled):hover{transform:translateY(-1px)}.icon,[data-icon]{display
 @media(max-width:760px){.layout{display:flex;flex-direction:column;gap:13px}.layout>*{width:100%}.assistant{order:2}.documents{order:3}.topactions{justify-content:center}.gateCard{padding:22px 14px}.profileGrid button{min-height:100px}.workspace{order:1}.paperWrap{padding:10px}.paper{padding:26px 19px;min-height:570px}.editorHead{gap:9px}}
 @media(prefers-reduced-motion:reduce){.confetti span,.welcomeEmoji{animation:none}button{transition:none}}
 @media print{.welcomeOverlay,.passwordOverlay{display:none!important}}
+
+/* Nour Ai identity badge at the left of the Arabic heading */
+.aiHead{display:flex!important;flex-direction:row!important;justify-content:space-between;align-items:center;gap:12px}
+.nourIdentity{display:flex;align-items:center;gap:10px;min-width:0}.nourIdentity h2{margin:0;font-size:19px}.nourIdentity small{display:block;margin-top:5px}
+.nourMark{flex:0 0 auto;width:61px;height:61px;border-radius:20px;display:grid;place-items:center;position:relative;background:linear-gradient(135deg,#1d43ad 0%,#8051db 55%,#cf48b6 100%);color:white;box-shadow:0 8px 24px #6936b64d;overflow:hidden}
+.nourMark strong{font-size:29px;font-family:Arial,sans-serif;font-weight:900;position:relative;z-index:2}.nourOrbit{position:absolute;inset:7px;border:1.5px solid #ffffffa6;border-radius:50%;transform:rotate(-25deg) scaleX(.7);animation:nourOrbit 4s linear infinite}.nourTwinkle{position:absolute;top:2px;left:8px;font-size:16px;animation:nourPulse 1.6s ease-in-out infinite}
+@keyframes nourOrbit{to{transform:rotate(335deg) scaleX(.7)}}@keyframes nourPulse{50%{opacity:.4;transform:scale(1.4)}}
+.welcomeOverlay .welcomeCard{animation:welcomePop .55s cubic-bezier(.16,1.5,.35,1) both}
+@keyframes welcomePop{from{opacity:0;transform:scale(.75) translateY(25px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@media(max-width:500px){.nourMark{width:48px;height:48px;border-radius:15px}.nourIdentity h2{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.nourOrbit,.nourTwinkle,.welcomeOverlay .welcomeCard{animation:none}}
