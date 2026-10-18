@@ -35,17 +35,4 @@
   // A citation formatter using user-supplied actual bibliographic data, not AI-generated fake sources.
   el('makeReference').onclick=()=>{const author=el('refAuthor').value.trim(),year=el('refYear').value.trim(),title=el('refTitle').value.trim(),publisher=el('refPublisher').value.trim(),url=el('refUrl').value.trim();if(!author||!title)return say('اكتبي المؤلف والعنوان');if(url&&!/^https?:\/\//i.test(url))return say('اكتبي رابطًا يبدأ بـ https://');el('refOutput').value=author+'. ('+(year||'د.ت.')+'). '+title+'.'+(publisher?' '+publisher+'.':'')+(url?' '+url:'');};
   el('insertReference').onclick=()=>{const ref=el('refOutput').value.trim();if(!ref)return say('أنشئي المرجع أولًا');editor.focus();document.execCommand('insertHTML',false,'<p dir="auto">'+esc(ref)+'</p>');delayedSave();say('أُضيف المرجع للمستند')};
-  // Supabase opt-in: browser-safe anon/publishable key only. RLS is mandatory on the table.
-  const cfg=window.LOLO_CONFIG||{};const cloudEnabled=/^https:\/\//.test(cfg.supabaseUrl||'')&&!!cfg.supabaseAnonKey&&!!window.supabase;
-  const sb=cloudEnabled?window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey):null;
-  let currentUser=null;
-  function cloudState(text){el('cloudStatus').textContent=text;}
-  if(!cloudEnabled){cloudState('الحسابات والمزامنة غير مفعّلة بعد. اتبعي ملف CLOUD_SETUP.md لتفعيل Supabase.');}
-  else {sb.auth.getUser().then(({data,error})=>{currentUser=data?.user||null;cloudState(error?'تعذّر التحقق من الجلسة':currentUser?'متصل: '+currentUser.email:'سجّلي الدخول لتفعيل النسخ السحابي')});sb.auth.onAuthStateChange((_e,session)=>{currentUser=session?.user||null;cloudState(currentUser?'متصل: '+currentUser.email:'غير مسجّل الدخول')});}
-  const creds=()=>({email:el('cloudEmail').value.trim(),password:el('cloudPassword').value});
-  el('cloudSignUp').onclick=async()=>{if(!sb)return say('المزامنة غير مفعلة');const c=creds();if(!c.email||c.password.length<8)return say('أدخلي بريدًا صحيحًا وكلمة مرور 8 أحرف على الأقل');const {error}=await sb.auth.signUp(c);say(error?error.message:'تم الطلب. تحققي من بريدك لو التفعيل مطلوب')};
-  el('cloudSignIn').onclick=async()=>{if(!sb)return say('المزامنة غير مفعلة');const {error}=await sb.auth.signInWithPassword(creds());say(error?error.message:'تم تسجيل الدخول')};
-  el('cloudSignOut').onclick=async()=>{if(!sb)return say('المزامنة غير مفعلة');await sb.auth.signOut();say('تم تسجيل الخروج')};
-  el('cloudUpload').onclick=async()=>{if(!sb||!currentUser)return say('فعّلي المزامنة وسجّلي الدخول أولًا');try{const current=storage(),value={format:'lolooo-word-backup-v1',documents:snapshot(),profile:current.profile};const {error}=await sb.from('lolo_backups').upsert({user_id:currentUser.id,profile:current.profile,content:value,updated_at:new Date().toISOString()},{onConflict:'user_id,profile'});if(error)throw error;say('تم رفع النسخة السحابية بنجاح');}catch(err){say('فشل الرفع: '+err.message)}};
-  el('cloudRestore').onclick=async()=>{if(!sb||!currentUser)return say('فعّلي المزامنة وسجّلي الدخول أولًا');try{const current=storage();const {data,error}=await sb.from('lolo_backups').select('content').eq('user_id',currentUser.id).eq('profile',current.profile).maybeSingle();if(error)throw error;if(!data)return say('لا توجد نسخة سحابية لهذا الملف الشخصي');if(!confirm('سيتم دمج المستندات من السحابة دون حذف مستندات الجهاز. متابعة؟'))return;const count=mergeDocs(data.content.documents);say('استرجعنا '+count+' مستندًا من السحابة');}catch(err){say('تعذّر الاسترجاع: '+err.message)}};
 })();

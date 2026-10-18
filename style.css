@@ -44,3 +44,55 @@ button:not(:disabled):hover{transform:translateY(-1px)}.icon,[data-icon]{display
 
 /* Advanced features */
 .extra-block{border-top:1px solid #dfe3fa;margin-top:16px;padding-top:13px}.extra-block h3{font-size:1rem;margin:5px 0 10px}.extra-block input,.advanced-ai input,.advanced-ai textarea,.extra-block textarea{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px;margin:5px 0;background:white;color:#1b2541;font:inherit}.extra-actions{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.extra-actions button{flex:1;min-width:72px}.extra-block>.wide{margin:5px 0}.advanced-ai{margin:18px 0}.advanced-ai details{border:1px solid #d8dafa;border-radius:13px;margin:10px 0;background:#fafaff;padding:12px;color:#1e2453}.advanced-ai summary{cursor:pointer;font-weight:700;padding:4px}.chatLog{height:230px;max-height:40vh;overflow:auto;background:#fff;border:1px solid #e0e3f7;border-radius:12px;margin:10px 0;padding:10px}.chatBubble{padding:9px 12px;border-radius:12px;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere;background:#eef2ff;color:#24325c}.chatBubble.me{background:#ede4ff}.quizItem{padding:12px;border:1px solid #dce0ed;border-radius:10px;margin:10px 0;background:#fff}.quizItem label{display:block;margin:7px 0;line-height:1.5;cursor:pointer}.quizFeedback{font-weight:600;margin-top:6px}#voiceBtn[aria-pressed=true]{background:#ffdce5;color:#ab174d}@media(max-width:600px){.extra-actions{flex-direction:column}.advanced-ai details{padding:9px}.chatLog{height:180px}}
+
+
+/* CLEAN & EASY UI — local-only edition */
+:root{--blue:#4565d6;--purple:#8655c7;--pink:#bb68b8;--bg:#f6f7fc;--text:#26334e;--border:#e3e8f4;--shadow:0 8px 30px rgba(41,54,95,.065)}
+body{background:radial-gradient(circle at 90% 0%,#f0eaff 0,transparent 38%),#f6f7fc;color:var(--text);line-height:1.7}
+.top{padding:15px clamp(16px,3vw,42px);box-shadow:0 3px 15px #303c5d08;position:relative;z-index:2}
+.topactions{flex-wrap:wrap}
+.brand strong{font-weight:800;letter-spacing:-.3px}
+.dedication{background:linear-gradient(100deg,#465fd1,#8b59bf);font-size:12px;padding:8px 14px}
+.layout{grid-template-columns:minmax(185px,215px) minmax(0,1fr) minmax(260px,310px);gap:17px;max-width:1750px;margin:22px auto;padding:0 20px}
+.panel,.workspace{border:1px solid #e7eafa;border-radius:22px;box-shadow:var(--shadow);padding:20px}
+.workspace{padding:22px}
+.panel h2{font-size:17px;color:#303d68}
+.documents .hint{line-height:1.85}
+.documents .doc{background:#fafbff;border:1px solid #e7eafa;padding:8px;border-radius:12px}
+.documents .doc:hover{border-color:#9faeed;background:#f2f4ff}
+.documents .doc .open{background:transparent}
+button{border-radius:12px;border:1px solid #e2e6f2;min-height:40px;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+button:hover{filter:none;transform:translateY(-1px);border-color:#b4bced;background:#f7f7fe}
+button.primary:hover{background:linear-gradient(115deg,#3e59c3,#8350ba,#b25bab);filter:brightness(1.05)}
+.primary{background:linear-gradient(115deg,#4869db,#8c58c9);border:0;color:#fff;box-shadow:0 4px 12px rgba(78,87,179,.13)}
+.muted{background:#f5f6fd}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #ad99e7;outline-offset:2px}
+.workspaceBanner{border-radius:16px;background:linear-gradient(105deg,#f1efff,#f3f7ff);border:1px solid #e4e3fc;padding:13px 16px;margin-bottom:16px}
+.editorHead{padding:5px 2px 16px;gap:15px}
+.editorHead input{font-size:21px;font-weight:750;max-width:100%}
+.toolbar{padding:12px;gap:7px;border-radius:15px;background:#f7f9fe;border-color:#e9ecf7}
+.toolbar button,.toolbar select{border-radius:10px;min-height:40px}
+.paperWrap{border-radius:16px;overflow:hidden}
+.paper{max-width:850px;margin:0 auto;box-shadow:0 6px 20px rgba(24,37,67,.05);outline:none}
+.assistant label{font-size:13px;font-weight:700;color:#44517a}
+.assistant textarea,.assistant select{border-radius:12px;border:1px solid #dce2f2;background:#fff;line-height:1.7}
+.aiHead{padding:0 0 13px;border-bottom:1px solid #eaecf5;margin-bottom:14px}
+.nourMark{box-shadow:0 6px 18px #7762c92e}
+.advanced-ai{margin-top:20px;padding-top:8px;border-top:1px solid #eaecf5}
+.advanced-ai details{background:#fff;border:1px solid #e1e6f5;border-radius:13px;padding:0;margin:8px 0;overflow:hidden}
+.advanced-ai summary{padding:13px 14px;background:#f9faff;color:#374873;font-size:13px;list-style-position:inside}
+.advanced-ai details[open]{padding:0 12px 12px}
+.advanced-ai details[open] summary{margin:0 -12px 10px;background:#f3f3ff}
+.extra-block{margin-top:13px;border-top:none;padding-top:6px}
+.local-tools{margin-top:13px;border:1px solid #e5e8f5;border-radius:13px;overflow:hidden;background:#fafbff}
+.local-tools>summary{cursor:pointer;display:block;padding:12px 11px;font-weight:700;font-size:13px;color:#42517a}
+.local-tools[open]{padding-bottom:10px}
+.local-tools .extra-block{padding:5px 12px 0;margin:0;border:0}
+.local-tools .extra-block h3{display:none}
+.local-tools button{font-size:12px}
+.import-action{margin-top:14px!important;border:1px solid #c9d6f4!important;background:#f1f5ff!important;color:#304caa!important;font-weight:700}
+.footnote{font-size:12px;line-height:1.8;color:#596b82}
+@media(max-width:1300px){.layout{grid-template-columns:185px minmax(0,1fr) 275px;gap:12px;padding:0 12px}.panel,.workspace{padding:16px}}
+@media(max-width:1080px){.layout{grid-template-columns:minmax(0,1fr) 300px}.workspace{grid-column:1;grid-row:1}.assistant{grid-column:2;grid-row:1}.documents{grid-column:1/-1;grid-row:2;display:block}.documents #docList{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}.documents .doc{margin:0}}
+@media(max-width:780px){.layout{display:flex;flex-direction:column;padding:0 11px;gap:12px;margin:12px auto}.workspace{order:1}.assistant{order:2}.documents{order:3}.layout>*{width:100%}.top{gap:10px;padding:12px}.topactions{justify-content:center}.brand img{width:52px;height:46px}.brand strong{font-size:18px}.workspace{padding:14px}.panel{padding:14px}.paperWrap{padding:8px}.paper{min-height:440px;padding:22px 17px}.toolbar{max-height:180px;overflow-y:auto}.editorHead{flex-wrap:wrap}.editorHead .export{width:100%}.editorHead #pdfBtn{width:100%}}
+@media(prefers-reduced-motion:reduce){button{transition:none}button:hover{transform:none}}
